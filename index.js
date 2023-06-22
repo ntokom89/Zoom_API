@@ -108,7 +108,7 @@ app.get('api/loginzoom', (req, res) => {
   const authCode=req.query.code;
   if (authCode) {
       // Request an access token using the auth code
-      let url =  'https://zoom.us/oauth/token?grant_type=authorization_code&code=' + authCode + '&redirect_uri=' + 'https://d70a-41-216-201-162.ngrok-free.app/loginzoom';
+      let url =  'https://zoom.us/oauth/token?grant_type=authorization_code&code=' + authCode + '&redirect_uri=' + 'https://ae-zoom-api.onrender.com/api/loginzoom';
       request.post(url, (error, response, body) => {
           // Parse response to JSON
           body = JSON.parse(body);
@@ -123,7 +123,7 @@ app.get('api/loginzoom', (req, res) => {
       return ;
   }
   // If no auth code is obtained, redirect to Zoom OAuth to do authentication
-  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://d70a-41-216-201-162.ngrok-free.app/loginzoom')
+  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/api/loginzoom')
 })
 
 
