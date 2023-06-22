@@ -1,0 +1,86 @@
+POST http://localhost:4000 HTTP/1.1
+content-type: application/json
+
+{
+  "meetingNumber": "562106352",
+  "role": 0
+}
+########
+GET https://d70a-41-216-201-162.ngrok-free.app/loginzoom HTTP/1.1
+########
+GET http://localhost:4000 HTTP/1.1
+########
+
+
+POST https://d70a-41-216-201-162.ngrok-free.app/Meeting HTTP/1.1
+content-type: application/json
+
+{
+        "agenda": "My Meeting test 3",
+        "default_password": false,
+        "password": "AGM65",
+        "pre_schedule": false,
+        "schedule_for": "ntokozomweli001@gmail.com",
+        "settings": {
+          "additional_data_center_regions": [
+            "TY"
+          ],
+          "allow_multiple_devices": true,
+          "alternative_hosts": "",
+          "alternative_hosts_email_notification": false,
+          "approval_type": 2,
+          "approved_or_denied_countries_or_regions": {
+            "approved_list": [
+              "CX"
+            ],
+            "denied_list": [
+              "CA"
+            ],
+            "enable": false,
+            "method": "approve"
+          },
+          "audio": "both",
+          "audio_conference_info": "test",
+          "auto_recording": "cloud",
+          "calendar_type": 1,
+          "close_registration": false,
+          "email_notification": true,
+          "encryption_type": "enhanced_encryption",
+          "focus_mode": true,
+          "host_video": true,
+          "jbh_time": 0,
+          "join_before_host": false,
+          "language_interpretation": {
+            "enable": true,
+            "interpreters": [
+            ]
+          },
+          "meeting_authentication": false,
+          "mute_upon_entry": false,
+          "participant_video": false,
+          "private_meeting": false,
+          "registrants_confirmation_email": true,
+          "registrants_email_notification": true,
+          "registration_type": 1,
+          "show_share_button": true,
+          "use_pmi": false,
+          "waiting_room": false,
+          "watermark": false,
+          "host_save_video_order": true,
+          "alternative_host_update_polls": true
+        },
+        "start_time": "2023-05-26T07:32:55Z",
+        "template_id": "Dv4YdINdTk+Z5RToadh5ug==",
+        "timezone": "America/Los_Angeles",
+        "topic": "My Meeting",
+        "tracking_fields": [
+          {
+            "field": "field1",
+            "value": "value1"
+          }
+        ],
+        "type": 2
+      
+ }
+ 
+      
