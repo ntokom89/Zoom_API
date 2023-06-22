@@ -104,11 +104,9 @@ app.get('api/',  (req, res) => {
 
 })
 
-app.get('/',  (req, res) => {
 
-})
 
-app.get('api/loginzoom', (req, res) => {
+app.get('/', (req, res) => {
   const authCode=req.query.code;
   if (authCode) {
       // Request an access token using the auth code
