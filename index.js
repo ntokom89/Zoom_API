@@ -50,7 +50,7 @@ app.post('/', (req, res) => {
   })
 })
 
-app.post('api/meeting', async (req, res) => {
+app.post('/api/meeting', async (req, res) => {
   Zoom.connect(
     'WRiUXZskRlGnNqsROjzfpw',
     'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
@@ -97,11 +97,11 @@ app.post('api/meeting', async (req, res) => {
  // res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://fcac-197-184-182-91.ngrok-free.app')
 })
 
-app.get('api/meeting',  (req, res) => {
+app.get('/api/meeting',  (req, res) => {
   res.send(JSON.stringify(tempZoomToken, null, 2));
 })
 
-app.get('api/',  (req, res) => {
+app.get('/api/',  (req, res) => {
 
 })
 
