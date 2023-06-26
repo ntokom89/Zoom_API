@@ -60,7 +60,8 @@ app.post('api/meeting', async (req, res) => {
   ///const meeting = await Zoom.meetingcreate('ntokozomweli001@gmail.com', req.body);
   //console.log(meeting);
   //console.log(tempZoomToken)
-  console.log(tempZoomToken);
+  //console.log(tempZoomToken);
+  console.log(`Zoom OAuth Access Token: ${tempZoomToken}`);
   var options = {
     //You can use a different uri if you're making an API call to a different Zoom endpoint.
     uri: 'https://api.zoom.us/v2/users/ntokozomweli001@gmail.com/meetings', 
