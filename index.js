@@ -123,7 +123,7 @@ app.get('/', (req, res) => {
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
           
       }).auth('WRiUXZskRlGnNqsROjzfpw', 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
-      return ;
+      return tempZoomToken;
   }
   // If no auth code is obtained, redirect to Zoom OAuth to do authentication
   res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/')
