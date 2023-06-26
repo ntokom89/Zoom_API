@@ -98,7 +98,7 @@ app.post('api/meeting', async (req, res) => {
 })
 
 app.get('api/meeting',  (req, res) => {
-
+  res.send(JSON.stringify(tempZoomToken, null, 2));
 })
 
 app.get('api/',  (req, res) => {
