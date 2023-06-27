@@ -122,9 +122,9 @@ app.get('/', (req, res) => {
           // Obtained access and refresh tokens
           console.log(`Zoom OAuth Access Token: ${accessToken}`);
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
+          res.json({accessToken: tempZoomToken});
           
       }).auth('WRiUXZskRlGnNqsROjzfpw', 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
-      res.json({accessToken: tempZoomToken});
       return;
   }
   // If no auth code is obtained, redirect to Zoom OAuth to do authentication
