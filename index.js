@@ -119,7 +119,7 @@ app.get('/', (req, res) => {
           tempZoomToken = body.access_token;
           const refreshToken = body.refresh_token;
           //res.send(JSON.stringify(tempZoomToken, null, 2));
-          // Obtained access and refresh tokens
+          // Obtained access and refresh token
           console.log(`Zoom OAuth Access Token: ${accessToken}`);
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
           res.json({accessToken: tempZoomToken});
