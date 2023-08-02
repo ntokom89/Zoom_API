@@ -122,6 +122,7 @@ app.get('/', (req, res) => {
           // Obtained access and refresh token
           console.log(`Zoom OAuth Access Token: ${accessToken}`);
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
+          /*
           if(accessToken){
             res.send(`
                     <style>
@@ -136,6 +137,8 @@ app.get('/', (req, res) => {
                     </div>
                 `);
           }
+          */
+          res.status(200).json(tempZoomToken);
           //res.json({accessToken: tempZoomToken});
           
       }).auth('WRiUXZskRlGnNqsROjzfpw', 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
