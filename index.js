@@ -57,6 +57,7 @@ app.post('/api/meeting', async (req, res) => {
     new Date().getTime() + 5000
     );
   const userID = req.body.userID;
+  const userEmail = req.body.schedule_for;
   ///const meeting = await Zoom.meetingcreate('ntokozomweli001@gmail.com', req.body);
   //console.log(meeting);
   //console.log(tempZoomToken)
@@ -64,7 +65,7 @@ app.post('/api/meeting', async (req, res) => {
   console.log(`Zoom OAuth Access Token: ${tempZoomToken}`);
   var options = {
     //You can use a different uri if you're making an API call to a different Zoom endpoint.
-    uri: 'https://api.zoom.us/v2/users/ntokozomweli001@gmail.com/meetings', 
+    uri: 'https://api.zoom.us/v2/users/'+ userEmail+'/meetings', 
     method: 'POST',
     auth: {
         'bearer': tempZoomToken
@@ -122,7 +123,7 @@ app.get('/', (req, res) => {
           // Obtained access and refresh token
           console.log(`Zoom OAuth Access Token: ${accessToken}`);
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
-          /*
+          
           if(accessToken){
             res.send(`
                     <style>
@@ -137,8 +138,8 @@ app.get('/', (req, res) => {
                     </div>
                 `);
           }
-          */
-          res.status(200).json(tempZoomToken);
+          
+          //res.status(200).json(tempZoomToken);
           //res.json({accessToken: tempZoomToken});
           
       }).auth('WRiUXZskRlGnNqsROjzfpw', 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
