@@ -16,6 +16,7 @@ let tempZoomToken = '';
   'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
   new Date().getTime() + 5000
   );
+
 const app = express()
 const port = process.env.PORT || 4000
 
@@ -76,7 +77,7 @@ app.post('/api/meeting', async (req, res) => {
     body: req.body,
     json: true //Parse the JSON string in the response
 };
-      let url =  'https://api.zoom.us/v2/users/ntokozomweli001@gmail.com/meetings';
+      let url =  'https://api.zoom.us/v2/users/'+userEmail + '/meetings';
       rp(options)
       .then(function (response) {
         //printing the response on the console
@@ -142,11 +143,11 @@ app.get('/', (req, res) => {
           //res.status(200).json(tempZoomToken);
           //res.json({accessToken: tempZoomToken});
           
-      }).auth('WRiUXZskRlGnNqsROjzfpw', 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
+      }).auth('g_Bv_Wc2Q2ehfdMrEz24JA', 'dAx85bs7yxnsD07FTTX2tJEzEb503Vu3');
       return tempZoomToken;
   }
   // If no auth code is obtained, redirect to Zoom OAuth to do authentication
-  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/')
+  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'g_Bv_Wc2Q2ehfdMrEz24JA' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/')
 })
 
 
