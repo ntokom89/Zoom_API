@@ -5,12 +5,14 @@ const crypto = require('crypto')
 const cors = require('cors')
 const KJUR = require('jsrsasign')
 const request = require('request')
+const axios = require('axios')
 const rp = require('request-promise');
 const jwt = require('jsonwebtoken'); 
 const Zoom = require("node-zoom-jwt")
 const payload = { iss: 'WRiUXZskRlGnNqsROjzfpw', exp: ((new Date()).getTime() + 5000) }; 
 let zoomAccessToken = jwt.sign(payload, 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
 let tempZoomToken = '';
+let currentUser = null;
  Zoom.connect(
   'WRiUXZskRlGnNqsROjzfpw',
   'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
@@ -51,6 +53,22 @@ app.post('/', (req, res) => {
   })
 })
 
+app.get('api/:zoom_user_id/get_token', async (req, res) => {
+
+  try {
+    const decryptedToken = decrypt(currentUser?.access_token);
+
+    return res.json({ access_token: decryptedToken });
+  } catch (error) {
+    return httpErrorHandler({
+      error,
+      res,
+      customMessage: ZOOM_TOKEN_ERROR,
+      logErrorPath: logHttpErrorPath(req),
+    });
+  }
+});
+
 app.post('/api/meeting', async (req, res) => {
   Zoom.connect(
     'WRiUXZskRlGnNqsROjzfpw',
@@ -58,23 +76,23 @@ app.post('/api/meeting', async (req, res) => {
     new Date().getTime() + 5000
     );
   const userID = req.body.userID;
-  const userEmail = req.body.schedule_for;
+  const userEmail = req.body.meetingBody.schedule_for;
   ///const meeting = await Zoom.meetingcreate('ntokozomweli001@gmail.com', req.body);
   //console.log(meeting);
   //console.log(tempZoomToken)
   //console.log(tempZoomToken);
-  console.log(`Zoom OAuth Access Token: ${tempZoomToken}`);
+  //console.log(`Zoom OAuth Access Token: ${tempZoomToken}`);
   var options = {
     //You can use a different uri if you're making an API call to a different Zoom endpoint.
     uri: 'https://api.zoom.us/v2/users/'+ userEmail+'/meetings', 
     method: 'POST',
     auth: {
-        'bearer': tempZoomToken
+        'bearer': req.body.token
     },
     headers: {
         'content-type': 'application/json'
     },
-    body: req.body,
+    body: req.body.meetingBody,
     json: true //Parse the JSON string in the response
 };
       let url =  'https://api.zoom.us/v2/users/'+userEmail + '/meetings';
@@ -100,7 +118,7 @@ app.post('/api/meeting', async (req, res) => {
 })
 
 app.get('/api/meeting',  (req, res) => {
-  res.send(JSON.stringify(tempZoomToken, null, 2));
+  res.send({ access_token: tempZoomToken });
 })
 
 app.get('/api/',  (req, res) => {
@@ -114,7 +132,7 @@ app.get('/', (req, res) => {
   if (authCode) {
       // Request an access token using the auth code
       let url =  'https://zoom.us/oauth/token?grant_type=authorization_code&code=' + authCode + '&redirect_uri=' + 'https://ae-zoom-api.onrender.com/';
-      request.post(url, (error, response, body) => {
+      request.post(url, async (error, response, body) => {
           // Parse response to JSON
           body = JSON.parse(body);
           const accessToken = body.access_token;
@@ -126,6 +144,12 @@ app.get('/', (req, res) => {
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
           
           if(accessToken){
+            const zoomUser = await axios.get(`${ZOOM_API_BASE_URL}/users/me`, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+           currentUser= await zoomUser?.data;
             res.send(`
                     <style>
                         @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap');@import url('https://necolas.github.io/normalize.css/8.0.1/normalize.css');html {color: #232333;font-family: 'Open Sans', Helvetica, Arial, sans-serif;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}h2 {font-weight: 700;font-size: 24px;}h4 {font-weight: 600;font-size: 14px;}.container {margin: 24px auto;padding: 16px;max-width: 720px;}.info {display: flex;align-items: center;}.info>div>span, .info>div>p {font-weight: 400;font-size: 13px;color: #747487;line-height: 16px;}.info>div>span::before {content: "👋";}.info>div>h2 {padding: 8px 0 6px;margin: 0;}.info>div>p {padding: 0;margin: 0;}.info>img {background: #747487;height: 96px;width: 96px;border-radius: 31.68px;overflow: hidden;margin: 0 20px 0 0;}.response {margin: 32px 0;display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;}.response>a {text-decoration: none;color: #2D8CFF;font-size: 14px;}.response>pre {overflow-x: scroll;background: #f6f7f9;padding: 1.2em 1.4em;border-radius: 10.56px;width: 100%;box-sizing: border-box;}
