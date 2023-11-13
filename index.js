@@ -5,14 +5,12 @@ const crypto = require('crypto')
 const cors = require('cors')
 const KJUR = require('jsrsasign')
 const request = require('request')
-const axios = require('axios')
 const rp = require('request-promise');
 const jwt = require('jsonwebtoken'); 
 const Zoom = require("node-zoom-jwt")
 const payload = { iss: 'WRiUXZskRlGnNqsROjzfpw', exp: ((new Date()).getTime() + 5000) }; 
 let zoomAccessToken = jwt.sign(payload, 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
 let tempZoomToken = '';
-let currentUser = null;
  Zoom.connect(
   'WRiUXZskRlGnNqsROjzfpw',
   'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
@@ -53,41 +51,26 @@ app.post('/', (req, res) => {
   })
 })
 
-app.get('api/:zoom_user_id/get_token', async (req, res) => {
-
-  try {
-    const decryptedToken = decrypt(currentUser?.access_token);
-
-    return res.json({ access_token: decryptedToken });
-  } catch (error) {
-    return httpErrorHandler({
-      error,
-      res,
-      customMessage: ZOOM_TOKEN_ERROR,
-      logErrorPath: logHttpErrorPath(req),
-    });
-  }
-});
-
 app.post('/api/meeting', async (req, res) => {
   Zoom.connect(
     'WRiUXZskRlGnNqsROjzfpw',
     'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
     new Date().getTime() + 5000
     );
-  const userID = req.body.userID;
+  //const userID = req.body.meetingBody.userID;
   const userEmail = req.body.meetingBody.schedule_for;
+  const tokenUser = req.body.token
   ///const meeting = await Zoom.meetingcreate('ntokozomweli001@gmail.com', req.body);
   //console.log(meeting);
   //console.log(tempZoomToken)
-  console.log( req.body.token);
-  //console.log(`Zoom OAuth Access Token: ${tempZoomToken}`);
+  //console.log(tempZoomToken);
+  console.log(`Zoom OAuth Access Token: ${tokenUser}`);
   var options = {
     //You can use a different uri if you're making an API call to a different Zoom endpoint.
-    uri: 'https://api.zoom.us/v2/users/me/meetings', 
+    uri: 'https://api.zoom.us/v2/users/'+ userEmail+'/meetings', 
     method: 'POST',
     auth: {
-        'bearer': req.body.token
+        'bearer': tokenUser
     },
     headers: {
         'content-type': 'application/json'
@@ -95,7 +78,7 @@ app.post('/api/meeting', async (req, res) => {
     body: req.body.meetingBody,
     json: true //Parse the JSON string in the response
 };
-      let url =  'https://api.zoom.us/v2/users/me/meetings';
+      let url =  'https://api.zoom.us/v2/users/'+userEmail + '/meetings';
       rp(options)
       .then(function (response) {
         //printing the response on the console
@@ -118,7 +101,7 @@ app.post('/api/meeting', async (req, res) => {
 })
 
 app.get('/api/meeting',  (req, res) => {
-  res.send({ access_token: tempZoomToken });
+  res.send(JSON.stringify(tempZoomToken, null, 2));
 })
 
 app.get('/api/',  (req, res) => {
@@ -132,7 +115,7 @@ app.get('/', (req, res) => {
   if (authCode) {
       // Request an access token using the auth code
       let url =  'https://zoom.us/oauth/token?grant_type=authorization_code&code=' + authCode + '&redirect_uri=' + 'https://ae-zoom-api.onrender.com/';
-      request.post(url, async (error, response, body) => {
+      request.post(url, (error, response, body) => {
           // Parse response to JSON
           body = JSON.parse(body);
           const accessToken = body.access_token;
@@ -142,6 +125,7 @@ app.get('/', (req, res) => {
           // Obtained access and refresh token
           console.log(`Zoom OAuth Access Token: ${accessToken}`);
           console.log(`Zoom OAuth Refresh Token: ${refreshToken}`);
+          
           if(accessToken){
             res.send(`
                     <style>
@@ -160,11 +144,11 @@ app.get('/', (req, res) => {
           //res.status(200).json(tempZoomToken);
           //res.json({accessToken: tempZoomToken});
           
-      }).auth('g_Bv_Wc2Q2ehfdMrEz24JA', 'dAx85bs7yxnsD07FTTX2tJEzEb503Vu3');
+      }).auth('WRiUXZskRlGnNqsROjzfpw', 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
       return tempZoomToken;
   }
   // If no auth code is obtained, redirect to Zoom OAuth to do authentication
-  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WTi9PJz9RdWOFM4zO6DuhQ' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/')
+  res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/')
 })
 
 
