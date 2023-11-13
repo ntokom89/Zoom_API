@@ -59,6 +59,8 @@ app.post('/api/meeting', async (req, res) => {
     );
   //const userID = req.body.meetingBody.userID;
   console.log(req.body);
+  console.log(req.body.meetingBody);
+  console.log(req.meetingBody);
   const userEmail = req.body.meetingBody.schedule_for;
   const tokenUser = req.body.token
   ///const meeting = await Zoom.meetingcreate('ntokozomweli001@gmail.com', req.body);
