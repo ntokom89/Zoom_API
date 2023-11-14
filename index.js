@@ -17,6 +17,10 @@ let tempZoomToken = '';
   new Date().getTime() + 5000
   );
 
+  ZOOM_ACCOUNT_ID='_e7iZm84TTuPzQ-9TxBZZQ'
+ZOOM_CLIENT_ID='7E42ItBWQkCb_yBeAwRXCQ'
+ZOOM_CLIENT_SECRET='5My5jlJItYqjXbX6zU2N4O2iMasaNn8w'
+
 const app = express()
 const port = process.env.PORT || 4000
 
@@ -50,6 +54,7 @@ app.post('/', (req, res) => {
     signature: signature
   })
 })
+
 
 app.post('/api/meeting', async (req, res) => {
   Zoom.connect(
@@ -111,8 +116,39 @@ app.get('/api/',  (req, res) => {
 
 })
 
+app.get('/', (req, res) => {
 
+  
+  let url = "https://zoom.us/oauth/token?grant_type=account_credentials&account_id=" + ZOOM_ACCOUNT_ID;
+  console.log(ZOOM_CLIENT_ID);
+  console.log(ZOOM_CLIENT_SECRET);
+  var options = {
+    //You can use a different uri if you're making an API call to a different Zoom endpoint.
+    uri: url, 
+    method: 'POST',
+    headers: {
+      Authorization : "Basic " + Buffer.from(ZOOM_CLIENT_ID+":"+ZOOM_CLIENT_SECRET).toString('base64'),
+    },
+     body: req.body,
+    json: true //Parse the JSON string in the response
+  };
 
+  rp(options).then(
+    function (response){
+      console.log('User has', response);
+      //console.log(typeof response);
+      resp = response
+      //JSON.stringify(resp, null, 2)
+      res.send(JSON.stringify(resp, null, 2));
+    }
+  ).catch(function (err) {
+    // API call failed...
+    console.log('API call failed, reason ', err);
+  });
+
+})
+
+/*
 app.get('/', (req, res) => {
   const authCode=req.query.code;
   if (authCode) {
@@ -153,6 +189,8 @@ app.get('/', (req, res) => {
   // If no auth code is obtained, redirect to Zoom OAuth to do authentication
   res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + 'WRiUXZskRlGnNqsROjzfpw' + '&redirect_uri=' +'https://ae-zoom-api.onrender.com/')
 })
+
+*/
 
 
 app.listen(port, () => console.log(`Zoom Meeting SDK Auth Endpoint Sample Node.js listening on port ${port}!`))
