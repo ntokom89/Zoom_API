@@ -34,6 +34,7 @@ app.post('/', (req, res) => {
 
   const oHeader = { alg: 'HS256', typ: 'JWT' }
 
+  /*
   const oPayload = {
    // sdkKey: process.env.ZOOM_MEETING_SDK_KEY,
     sdkKey: "WRiUXZskRlGnNqsROjzfpw",
@@ -45,10 +46,18 @@ app.post('/', (req, res) => {
     appKey: "WRiUXZskRlGnNqsROjzfpw",
     tokenExp: iat + 60 * 60 * 2
   }
+  */
+  const oPayload = {
+    sdkKey: "Qa7xjmbJQtepa5drSNMzqA",
+    iat: iat,
+    exp: exp,
+    mn: req.body.meetingNumber,
+    role: req.body.role,
+  };
 
   const sHeader = JSON.stringify(oHeader)
   const sPayload = JSON.stringify(oPayload)
-  const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, "xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf")
+  const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, "bUPRAnnONHYbd1YswQ0U8OPWKmXciTIM")
 
   res.json({
     signature: signature
