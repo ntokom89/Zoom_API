@@ -8,18 +8,12 @@ const request = require('request')
 const rp = require('request-promise');
 const jwt = require('jsonwebtoken'); 
 const Zoom = require("node-zoom-jwt")
-const payload = { iss: 'WRiUXZskRlGnNqsROjzfpw', exp: ((new Date()).getTime() + 5000) }; 
-let zoomAccessToken = jwt.sign(payload, 'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf');
+//const payload = { iss: 'WRiUXZskRlGnNqsROjzfpw', exp: ((new Date()).getTime() + 5000) }; 
 let tempZoomToken = '';
- Zoom.connect(
-  'WRiUXZskRlGnNqsROjzfpw',
-  'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
-  new Date().getTime() + 5000
-  );
 
-  ZOOM_ACCOUNT_ID='_e7iZm84TTuPzQ-9TxBZZQ'
-ZOOM_CLIENT_ID='7E42ItBWQkCb_yBeAwRXCQ'
-ZOOM_CLIENT_SECRET='5My5jlJItYqjXbX6zU2N4O2iMasaNn8w'
+//ZOOM_ACCOUNT_ID='_e7iZm84TTuPzQ-9TxBZZQ'
+//ZOOM_CLIENT_ID='7E42ItBWQkCb_yBeAwRXCQ'
+//ZOOM_CLIENT_SECRET='5My5jlJItYqjXbX6zU2N4O2iMasaNn8w'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -48,7 +42,7 @@ app.post('/', (req, res) => {
   }
   */
   const oPayload = {
-    sdkKey: "Qa7xjmbJQtepa5drSNMzqA",
+    sdkKey: process.env.ZOOM_CLIENT_ID_2,
     iat: iat,
     exp: exp,
     mn: req.body.meetingNumber,
@@ -57,7 +51,7 @@ app.post('/', (req, res) => {
 
   const sHeader = JSON.stringify(oHeader)
   const sPayload = JSON.stringify(oPayload)
-  const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, "bUPRAnnONHYbd1YswQ0U8OPWKmXciTIM")
+  const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, [process.env.ZOOM_CLIENT_SECRET_2])
 
   res.json({
     signature: signature
@@ -66,11 +60,7 @@ app.post('/', (req, res) => {
 
 
 app.post('/api/meeting', async (req, res) => {
-  Zoom.connect(
-    'WRiUXZskRlGnNqsROjzfpw',
-    'xznQ4B0U2ZvxZdHVyJpKKvQ3AzC2JsKf',
-    new Date().getTime() + 5000
-    );
+
   //const userID = req.body.meetingBody.userID;
   console.log(req.body);
   console.log(req.body.meetingBody);
@@ -128,15 +118,13 @@ app.get('/api/',  (req, res) => {
 app.get('/', (req, res) => {
 
   
-  let url = "https://zoom.us/oauth/token?grant_type=account_credentials&account_id=" + ZOOM_ACCOUNT_ID;
-  console.log(ZOOM_CLIENT_ID);
-  console.log(ZOOM_CLIENT_SECRET);
+  let url = "https://zoom.us/oauth/token?grant_type=account_credentials&account_id=" + process.env.ZOOM_ACCOUNT_ID;
   var options = {
     //You can use a different uri if you're making an API call to a different Zoom endpoint.
     uri: url, 
     method: 'POST',
     headers: {
-      Authorization : "Basic " + Buffer.from(ZOOM_CLIENT_ID+":"+ZOOM_CLIENT_SECRET).toString('base64'),
+      Authorization : "Basic " + Buffer.from(process.env.ZOOM_CLIENT_ID+":"+ process.env.ZOOM_CLIENT_SECRET).toString('base64'),
     },
      body: req.body,
     json: true //Parse the JSON string in the response
